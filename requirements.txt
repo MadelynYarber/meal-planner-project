@@ -1,1 +1,1 @@
-#This file contains all the libraries the project is dependant on
+#This file contains all the libraries the project is dependant on and required Python packages
