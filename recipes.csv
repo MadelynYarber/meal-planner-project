@@ -1,1 +1,25 @@
-recipes
+Chicken Quesadilla: { Reg }{ chicken, shredded cheese, tortilla }
+Veggie Omelet: { Veg, Reg, Pesc }{ egg, bell pepper, onion }
+Potato Soup: { All } { potato, onion, garlic, celery }
+Grilled Cheese: { Veg, Reg, Pesc }{ bread, sliced cheese }
+Beans and Rice: { All }{ black beans, white rice }
+Fruit Bowl: { All }{ strawberries, grapes, pineapple }
+Strawberry Smoothie: { All }{ strawberries, almond milk }
+Oatmeal with fruit: { All }{ oats, almond milk, strawberries }
+Stuffed peppers: { Reg }{ bell pepper, ground beef, tomato sauce }
+Salmon Bowl: { Reg, Pesc }{ salmon, white rice, edamame }
+Chicken bowl:{ Reg }{ chicken, black beans, white rice }
+Roasted Vegtables: { All }{ carrots, broccoli, potato }
+Egg and Cheese Sandwich: { Veg, Reg, Pesc }{ egg, sliced cheese, bread }
+Shrimp Tacos: { Reg, Pesc }{ shrimp, tortilla, cabbage }
+Chicken Kabob: { Reg }{ chicken, bell pepper, onion }
+Black Bean Quesadilla: { Reg, Veg, Pesc }{ black beans, corn, tortilla }
+Chili: { Reg }{ ground beef, black beans, tomato sauce }
+Chicken Stir fry: { Reg }{ chicken, white rice, broccoli, carrots, soy sauce }
+Vegan Stir fry: { All }{ white rice, broccoli, carrots, soy sauce }
+Chicken Salad: { Reg } { chicken, celery, mayonnaise }
+Salmon with garlic broccol: { Reg, Pesc }{ salmon, broccoli, garlic }
+Shrimp and rice bowl: { Reg, Pesc }{ shrimp, white rice, soy sauce, garlic }
+Cabbage and Carrot Slaw: { All }{ cabbage, carrot, mayonnaise }
+Ground Beef Tacos: { Reg }{ beef, tortilla, shredded cheese, onion }
+Vegan Stuffed Bell Peppers: { All }{ bell pepper, rice, black beans, onion }
