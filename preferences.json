@@ -1,1 +1,46 @@
 #This file contains the users preferences and Nutritional Goals.
+#can tweak numbers later if too many recipes get in 
+{
+  "user_preferences": [
+    {
+      "diet": "omnivore",
+      "nutritional_goals": {
+        "calories": 2500,
+        "protein": 100,
+        "carbs": 300,
+        "fat": 80,
+        "fiber": 25
+      }
+    },
+    {
+      "diet": "vegetarian",
+      "nutritional_goals": {
+        "calories": 2000,
+        "protein": 70,
+        "carbs": 250,
+        "fat": 65,
+        "fiber": 35
+      }
+    },
+    {
+      "diet": "vegan",
+      "nutritional_goals": {
+        "calories": 1800,
+        "protein": 60,
+        "carbs": 220,
+        "fat": 60,
+        "fiber": 35
+      }
+    },
+    {
+      "diet": "pescatarian",
+      "nutritional_goals": {
+        "calories": 2300,
+        "protein": 150,
+        "carbs": 200,
+        "fat": 70,
+        "fiber": 25
+      }
+    }
+  ]
+}
