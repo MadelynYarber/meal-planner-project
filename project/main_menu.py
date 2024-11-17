@@ -8,7 +8,7 @@ def load_preferences(filename: str):
         with open(filename, mode='r') as file:
             preferences = json.load(file)
         print("Preferences loaded successfully.\n")  # Temporary print for validation
-        #print(preferences)  #delete these lines later
+        #print(preferences)  # can delete these lines later
         return preferences
     except FileNotFoundError:
         print("Error: JSON file not found.")
@@ -22,7 +22,7 @@ def load_recipes(filename: str):
     try:
         with open(filename, mode='r') as file:
             for line in file:
-                # Ignore empty lines
+                # Ignore empty
                 line = line.strip()
                 if not line:
                     continue
@@ -32,7 +32,7 @@ def load_recipes(filename: str):
                     name, rest = line.split(":", 1)
                     tags, ingredients = rest.split("}{")
                     
-                    # Clean data
+                    # Clean 
                     name = name.strip()
                     tags = tags.replace("{", "").replace("}", "").strip().split(", ")
                     ingredients = ingredients.replace("}", "").strip().split(", ")
@@ -45,8 +45,8 @@ def load_recipes(filename: str):
                     })
                 except ValueError:
                     print(f"Skipping invalid line: {line}")
-        print("Recipes loaded successfully.\n")  # Temporary print for validation
-        #print(recipes)  # Delete this line later if not needed
+        print("Recipes loaded successfully.\n")  # Temporary print validation
+        #print(recipes)  # Delete this later?
         return recipes
     except FileNotFoundError:
         print("Error: Text file not found.")
@@ -61,10 +61,10 @@ def load_ingredients(filename: str):
         with open(filename, mode='r') as file:
             reader = csv.DictReader(file)
             for row in reader:
-                # Each row is a dictionary where keys are column headers
+                # Each row dictionary with column headers
                 ingredients.append({key.strip(): value.strip() for key, value in row.items()})
-        print("Ingredients loaded successfully.\n")  # Temporary print for validation
-        #print(ingredients)  # Delete this line later if not needed
+        print("Ingredients loaded successfully.\n")  # Temporary validation print
+        #print(ingredients)  # Delete this line later
         return ingredients
     except FileNotFoundError:
         print("Error: CSV file not found.")
@@ -116,13 +116,13 @@ def recommend_recipes(recipes, preferences):
     diet_type = selected_preference.get("diet", "All").lower()
     tag_to_match = diet_tag_mapping.get(diet_type, "All")
 
-    # Filter recipes based on diet preference (case-insensitive comparison)
+    # Filter recipes based on diet preference
     filtered_recipes = [
         recipe for recipe in recipes
         if tag_to_match.lower() in [tag.lower() for tag in recipe["tags"]] or "all" in [tag.lower() for tag in recipe["tags"]]
     ]
     
-    #Sorting by the number of ingredients (ascending)
+    #Sorting by the number of ingredients making shopping/picking easier
     sorted_recipes = sorted(filtered_recipes, key=lambda r: len(r["ingredients"]))
     
     print(f"\nRecommended recipes for the {diet_type} diet (including recipes tagged 'All'):\n")
@@ -212,7 +212,7 @@ def calculate_nutrition(selected_recipes, ingredients):
             if ingredient_lower in nutritional_data:
                 nutrition_info = nutritional_data[ingredient_lower]
 
-                # Sum up the nutritional values
+                # Sum nutritional values
                 total_nutrition['calories'] += nutrition_info['calories']
                 total_nutrition['protein'] += nutrition_info['protein']
                 total_nutrition['carbs'] += nutrition_info['carbs']
@@ -226,17 +226,117 @@ def calculate_nutrition(selected_recipes, ingredients):
     return nutrition_summary
 
 
+def create_meal_plan(selected_recipes_nutrition, selected_diet, output_filename='meal_plan.txt'):
+    # Daily calorie limit from the selected diet
+    calorie_limit = selected_diet["nutritional_goals"]["calories"]
+
+    # 7-day meal plan
+    meal_plan = {day: [] for day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}
+    day_nutrition_totals = {day: {"calories": 0, "protein": 0, "carbs": 0, "fat": 0, "fiber": 0} for day in meal_plan}
+
+    # List of available recipes
+    recipes = list(selected_recipes_nutrition.items())
+
+    # Meal plan random no repeats for each day
+    for day in meal_plan.keys():
+        used_recipes = set()  # Track used recipes for the day
+        while day_nutrition_totals[day]["calories"] < calorie_limit:
+            recipe_name, nutrition = random.choice(recipes)  # Randomly select a recipe
+
+            # Check if recipe already used daily
+            if recipe_name not in used_recipes:
+                # Check if adding the recipe would exceed the calorie limit
+                if day_nutrition_totals[day]["calories"] + nutrition["calories"] <= calorie_limit:
+                    # Add recipe to the current day
+                    meal_plan[day].append(recipe_name)
+                    used_recipes.add(recipe_name)  # Mark recipe as used
+
+                    # Update nutritional totals for the day
+                    for key in day_nutrition_totals[day]:
+                        day_nutrition_totals[day][key] += nutrition[key]
+                else:
+                    break  # Stop adding if the calorie limit would be exceeded
+
+    # Write meal plan to a file
+    with open(output_filename, 'w') as file:
+        for day, recipes in meal_plan.items():
+            file.write(f"\n{day}:\n")
+            if recipes:
+                for recipe in recipes:
+                    file.write(f"  - {recipe}\n")
+                file.write("Total Nutritional Values for the day:\n")
+                file.write(f"  Calories: {round(day_nutrition_totals[day]['calories'], 1)} kcal\n")
+                file.write(f"  Protein: {round(day_nutrition_totals[day]['protein'], 1)} g\n")
+                file.write(f"  Carbs: {round(day_nutrition_totals[day]['carbs'], 1)} g\n")
+                file.write(f"  Fat: {round(day_nutrition_totals[day]['fat'], 1)} g\n")
+                file.write(f"  Fiber: {round(day_nutrition_totals[day]['fiber'], 1)} g\n")
+            else:
+                file.write("  No recipes available for this day.\n")
+
+    print(f"Meal plan has been written to {output_filename}")
+
+
+from collections import Counter
+
+def load_recipes_from_text(file_path):
+    #recipes and ingredients the text file
+    recipes_ingredients = {}
+    with open(file_path, 'r') as file:
+        for line in file:
+            if ':' in line:
+                recipe_name, rest = line.split(':', 1)
+                ingredients_part = rest.split('}{')[-1].strip(' }{\n')  # Extract ingredients 
+                ingredients = [ingredient.strip() for ingredient in ingredients_part.split(',')]
+                recipes_ingredients[recipe_name.strip()] = ingredients
+    return recipes_ingredients
+
+def count_recipe_occurrences(meal_plan_file):
+    # Count occurrences recipe in the meal_plan.txt
+    recipe_counter = Counter()
+    with open(meal_plan_file, 'r') as file:
+        for line in file:
+            line = line.strip()
+            if line.startswith('-'):
+                recipe = line[1:].strip()  # Remove whitespace
+                recipe_counter[recipe] += 1
+    return recipe_counter
+
+def generate_shopping_list(meal_plan_file, recipes_file, output_filename='meal_plan.txt'):
+    #Load recipes and their ingredients
+    recipes_ingredients = load_recipes_from_text(recipes_file)
+    
+    #Count times appears in the meal plan
+    recipe_occurrences = count_recipe_occurrences(meal_plan_file)
+
+    #Aggregate ingredient occurrences
+    shopping_list = Counter()
+    for recipe, count in recipe_occurrences.items():
+        if recipe in recipes_ingredients:
+            for ingredient in recipes_ingredients[recipe]:
+                shopping_list[ingredient] += count
+        else:
+            print(f"Warning: '{recipe}' not found in recipes_ingredients.")
+
+    #Write to the file meal_plan.txt for call after meal planned
+    with open(output_filename, 'a') as file:  # Append to existing file
+        file.write("\nShopping List:\n")
+        for ingredient, count in shopping_list.items():
+            file.write(f"{ingredient}: {count}x\n")
+
+    print("Shopping list generated to the output file.")
 
 def main():
     # Load data files
     preferences = load_preferences('preferences.json')
     recipes = load_recipes('recipes.txt')
     ingredients = load_ingredients('ingredients.csv')
+    #These all work beautifully
     
     #revelation starts here!!!!
     selected_diet = pick_preference(preferences)
-    print(selected_diet)
+    #print(selected_diet)
     #^^^ can then pass selected diet instead go back and fix
+
     #Recommend recipes based on user preference
     print("recipes recommended by preference")
     recommended_recipes = recommend_recipes(recipes, preferences)
@@ -245,17 +345,25 @@ def main():
     #Allow the user to pick recipes for meal planning
     print("select preference to see available recipes")
     selected_recipes = pick_from_sorted(recommended_recipes, preferences)
-    print (selected_recipes)
+    #print (selected_recipes)
     
     selected_recipes_nutrition = calculate_nutrition(selected_recipes, ingredients)
+    #print(selected_recipes_nutrition)
+    
+    #creates semi random meal plan with nutrition and selected diet in mind
+    create_meal_plan(selected_recipes_nutrition, selected_diet)
+    
+    #generates shopping list based on # of occurences of ingredient 
+    generate_shopping_list('meal_plan.txt', 'recipes.txt')
     
 if __name__ == "__main__":
     main()
 
-'''go forward with rewrtiging functions calling selected_diet from line 265 down need rewrite
-fix nutritional. and make it call less
-ALL The loads are good. just need to fix things after pick_preference
-'''
+'''Final thoughts: this is basic and creates the semi-random meal plan based on a calorie limiter. Could
+implement a limiter for different nutritional values. SHOULD have started from "selected_diet before continuing
+on. Some of the menu items repeat within the same day, maybe dont allow that? larger input sets would help
+smooth out output.DATA on ingredients/preferences could be tweaked to be more realistic on food intake. Lost team
+member late in the game. '''
 
 
 
