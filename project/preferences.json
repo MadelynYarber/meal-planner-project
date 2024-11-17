@@ -1,5 +1,3 @@
-#This file contains the users preferences and Nutritional Goals.
-#can tweak numbers later if too many recipes get in 
 {
   "user_preferences": [
     {
@@ -44,3 +42,4 @@
     }
   ]
 }
+
