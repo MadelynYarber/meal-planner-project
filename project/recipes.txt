@@ -1,0 +1,25 @@
+Chicken Quesadilla: { Omni }{ chicken, shredded cheese, tortilla }
+Veggie Omelet: { Veg, Omni, Pesc }{ egg, bell pepper, onion }
+Potato Soup: { All }{ potato, onion, garlic, celery }
+Grilled Cheese: { Veg, Omni, Pesc }{ bread, sliced cheese }
+Beans and Rice: { All }{ black beans, rice }
+Fruit Bowl: { All }{ strawberries, grapes, pineapple }
+Strawberry Smoothie: { All }{ strawberries, almond milk }
+Oatmeal with fruit: { All }{ oats, almond milk, strawberries }
+Stuffed peppers: { Omni }{ bell pepper, ground beef, tomato sauce }
+Salmon Bowl: { Omni, Pesc }{ salmon, rice, edamame }
+Chicken bowl: { Omni }{ chicken, black beans, rice }
+Roasted Vegetables: { All }{ carrot, broccoli, potato }
+Egg and Cheese Sandwich: { Veg, Omni, Pesc }{ egg, sliced cheese, bread }
+Shrimp Tacos: { Omni, Pesc }{ shrimp, tortilla, cabbage }
+Chicken Kabob: { Omni }{ chicken, bell pepper, onion }
+Black Bean Quesadilla: { Omni, Veg, Pesc }{ black beans, corn, tortilla }
+Chili: { Omni }{ ground beef, black beans, tomato sauce }
+Chicken Stir fry: { Omni }{ chicken, rice, broccoli, carrot, soy sauce }
+Vegan Stir fry: { All }{ rice, broccoli, carrot, soy sauce }
+Chicken Salad: { Omni }{ chicken, celery, mayonnaise }
+Salmon with garlic broccoli: { Omni, Pesc }{ salmon, broccoli, garlic }
+Shrimp and rice bowl: { Omni, Pesc }{ shrimp, rice, soy sauce, garlic }
+Cabbage and Carrot Slaw: { All }{ cabbage, carrot, mayonnaise }
+Ground Beef Tacos: { Omni }{ beef, tortilla, shredded cheese, onion }
+Vegan Stuffed Bell Peppers: { All }{ bell pepper, rice, black beans, onion }
