@@ -1,0 +1,51 @@
+import sys
+
+def display_menu()
+    
+    -Displays the main menu for Smart Recipe Recommender and Meal Planner.
+    
+    print(n===== Smart Recipe Recommender and Meal Planner =====)
+    print(1. Load ingredients from CSV)
+    print(2. Set or update user preferences)
+    print(3. Recommend recipes)
+    print(4. Generate weekly meal plan)
+    print(5. Generate shopping list)
+    print(6. Display nutritional analysis)
+    print(7. Exit)
+    print(====================================================)
+
+def handle_option(choice int)
+    
+    -Handles the user's menu choice by calling functions from another file.
+    -Extra added for testing.
+    -Remove Later Combine 5,6,7 and just verify success
+    
+    if choice == 1
+        print(Function to load ingredients will be called.)
+    elif choice == 2
+        print(Function to set user preferences will be called.)
+    elif choice == 3
+        print(Function to recommend recipes will be called.)
+    elif choice == 4
+        print(Function to generate a meal plan will be called.)
+    elif choice == 5
+        print(Function to generate a shopping list will be called.)
+    elif choice == 6
+        print(Function to display nutritional analysis will be called.)
+    elif choice == 7
+        print(Exiting the application. Goodbye!)
+        sys.exit(0)
+    else
+        print(Invalid choice. Please select a valid option.)
+
+def main()
+    while True
+        display_menu()
+        try
+            choice = int(input(Enter your choice ))
+            handle_option(choice)
+        except ValueError
+            print(Invalid input. Please enter a number from 1 to 7.)
+
+if __name__ == __main__
+    main()

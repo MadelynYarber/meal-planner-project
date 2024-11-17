@@ -1,0 +1,45 @@
+ recipes = []
+    try:
+        with open(filename, mode='r') as file:
+            for line in file:
+                # Ignore empty lines
+                line = line.strip()
+                if not line:
+                    continue
+                
+                # Parse the recipe name, tags, and ingredients
+                try:
+                    name, rest = line.split(":", 1)
+                    tags, ingredients = rest.split("}{")
+                    
+                    
+                    name = name.strip()
+                    tags = tags.replace("{", "").replace("}", "").strip().split(", ")
+                    ingredients = ingredients.replace("}", "").strip().split(", ")
+
+                    # Add the structured recipe data to the list
+                    recipes.append({
+                        "name": name,
+                        "tags": tags,
+                        "ingredients": ingredients
+                    })
+                except ValueError:
+                    print(f"Skipping invalid line: {line}")
+        print("Recipes loaded successfully.\n")  # Temp print
+        print(recipes)  # Delete later
+        return recipes
+    except FileNotFoundError:
+        print("Error: Text file not found.")
+        return []
+    except Exception as e:
+        print(f"Error: Failed to load recipes. {e}")
+        return []
+
+if __name__ == "__main__":
+    '''
+    # Test the load_preferences
+    preferences = load_preferences("preferences.json")
+    '''
+    
+    # Test the load_recipes
+    recipes = load_recipes("recipes.txt")

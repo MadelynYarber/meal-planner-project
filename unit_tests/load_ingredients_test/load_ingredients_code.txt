@@ -1,0 +1,14 @@
+ # Test the load_ingredients function
+    ingredients = load_ingredients("ingredients.csv")
+    
+    found = False
+    for ingredient in ingredients:
+        ingredient_name = ingredient.get("ingredient")
+        if ingredient_name:
+            ingredient_name = ingredient_name.strip().lower()  
+            if ingredient_name == "salmon":
+                print(f"Calories in salmon: {ingredient.get('calories', 'N/A')} kcal")
+                found = True
+                break
+    if not found:
+        print("Salmon not found in the ingredients list.")
