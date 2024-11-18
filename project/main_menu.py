@@ -72,6 +72,7 @@ def load_ingredients(filename: str):
     except Exception as e:
         print(f"Error: Failed to load ingredients. {e}")
         return []
+    
 #obligatory promts user and returns selected_diet
 def pick_preference(preferences):
     available_diets = [pref["diet"] for pref in preferences.get("user_preferences", [])]
@@ -95,6 +96,7 @@ def pick_preference(preferences):
     except ValueError:
         print("Invalid input. Please enter a number.")
         return None     
+    
 #function return preference FIX 
 def recommend_recipes(recipes, preferences):
     # Create mapping full diet names and tags
@@ -107,7 +109,7 @@ def recommend_recipes(recipes, preferences):
 
     # Get user-selected preference using the pick_preference function
     #FIX
-    selected_preference = pick_preference(preferences)
+    selected_preference = preferences.get('selected_preference', None)
     if not selected_preference:
         print("No valid preference selected. Cannot recommend recipes.")
         return []
@@ -126,25 +128,25 @@ def recommend_recipes(recipes, preferences):
     sorted_recipes = sorted(filtered_recipes, key=lambda r: len(r["ingredients"]))
     
     print(f"\nRecommended recipes for the {diet_type} diet (including recipes tagged 'All'):\n")
-    for recipe in sorted_recipes:
-        ingredients_list = ", ".join(recipe["ingredients"])  # Join ingredients into string
-        print(f"- {recipe['name']} (Ingredients: {len(recipe['ingredients'])})")
-        print(f"  Ingredients: {ingredients_list}\n")
+    #for recipe in sorted_recipes:
+        #ingredients_list = ", ".join(recipe["ingredients"])  # Join ingredients into string
+        #print(f"- {recipe['name']} (Ingredients: {len(recipe['ingredients'])})")
+        #print(f"  Ingredients: {ingredients_list}\n")
     
     return sorted_recipes
 #used in meal_plan
 def pick_from_sorted(recipes, preferences):
     # Get the sorted list of recommended recipes
-    recommended_recipes = recommend_recipes(recipes, preferences)
+    # recommended_recipes = recommend_recipes(recipes, preferences)
     
-    if not recommended_recipes:
+    if not recipes:
         print("No recommended recipes available.")
         return []
 
     selected_recipes = []  # List to store the selected recipes
-    available_recipes = recommended_recipes[:]  # Copy of recommended recipes to track remaining options
+    available_recipes = recipes[:]  # Copy of recommended recipes to track remaining options
 
-    while available_recipes:
+    def display_available_recipes():
         # Display available recipes with numbering
         print("\nAvailable recipes to pick from:")
         for index, recipe in enumerate(available_recipes, start=1):
@@ -152,6 +154,9 @@ def pick_from_sorted(recipes, preferences):
             print(f"{index}. {recipe['name']} (Ingredients: {len(recipe['ingredients'])})")
             print(f"   Ingredients: {ingredients_list}\n")
 
+    display_available_recipes()
+
+    while available_recipes:
         # Prompt the user to pick a recipe or add all remaining recipes
         user_input = input("Enter the number of the recipe to pick, 'all' to add all remaining recipes, or 'done' to finish: ").strip().lower()
         
@@ -237,11 +242,22 @@ def create_meal_plan(selected_recipes_nutrition, selected_diet, output_filename=
     # List of available recipes
     recipes = list(selected_recipes_nutrition.items())
 
+    #Protects from infinite loop
+    MAX_ATTEMPTS = 50
+    attempt_count = 0
+
     # Meal plan random no repeats for each day
     for day in meal_plan.keys():
         used_recipes = set()  # Track used recipes for the day
+        #Test message
+        print(f"Creating meal plan for {day}.")
+
         while day_nutrition_totals[day]["calories"] < calorie_limit:
+            if attempt_count >= MAX_ATTEMPTS:
+                print(f"Too many attempts to fill {day}'s meal plan. Exiting.")
+                break
             recipe_name, nutrition = random.choice(recipes)  # Randomly select a recipe
+            attempt_count += 1
 
             # Check if recipe already used daily
             if recipe_name not in used_recipes:
@@ -336,14 +352,15 @@ def main():
     selected_diet = pick_preference(preferences)
     #print(selected_diet)
     #^^^ can then pass selected diet instead go back and fix
+    preferences['selected_preference'] = selected_diet
 
     #Recommend recipes based on user preference
-    print("recipes recommended by preference")
+    #print("recipes recommended by preference")
     recommended_recipes = recommend_recipes(recipes, preferences)
     
     
     #Allow the user to pick recipes for meal planning
-    print("select preference to see available recipes")
+    # print("select preference to see available recipes")
     selected_recipes = pick_from_sorted(recommended_recipes, preferences)
     #print (selected_recipes)
     
