@@ -146,7 +146,7 @@ def pick_from_sorted(recipes, preferences):
     selected_recipes = []  # List to store the selected recipes
     available_recipes = recipes[:]  # Copy of recommended recipes to track remaining options
 
-    def display_available_recipes():
+    while available_recipes:
         # Display available recipes with numbering
         print("\nAvailable recipes to pick from:")
         for index, recipe in enumerate(available_recipes, start=1):
@@ -154,9 +154,6 @@ def pick_from_sorted(recipes, preferences):
             print(f"{index}. {recipe['name']} (Ingredients: {len(recipe['ingredients'])})")
             print(f"   Ingredients: {ingredients_list}\n")
 
-    display_available_recipes()
-
-    while available_recipes:
         # Prompt the user to pick a recipe or add all remaining recipes
         user_input = input("Enter the number of the recipe to pick, 'all' to add all remaining recipes, or 'done' to finish: ").strip().lower()
         
