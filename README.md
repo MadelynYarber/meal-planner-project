@@ -6,9 +6,9 @@ This project is a meal planning application that recommends recipes, creates mea
 1. Clone the repository
 2. Install the required packages
 ~~example she gives: pip install -r requirements.txt
-3. Ensure you have 'ingredients.csv' and 'preferences.json' in the project directory
+3. Ensure you have 'ingredients.csv', 'preferences.json', and 'recipes.txt' in the project directory
 4. Run the main script
-~~give example, hers: python myProject.py
+example: python main_menu.py
 
 ## Running Tests
 To run the unit tests:
