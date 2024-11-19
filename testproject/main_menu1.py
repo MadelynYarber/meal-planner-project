@@ -3,12 +3,12 @@ import json
 import csv
 import random
 
+# load in preferences file
 def load_preferences(filename: str):
     try:
-        with open('preferences1.json') as file:
+        with open(filename, mode='r') as file:
             preferences = json.load(file)
         print("Preferences loaded successfully.\n")  # Temporary print for validation
-        #print(preferences)  # can delete these lines later
         return preferences
     except FileNotFoundError:
         print("Error: JSON file not found.")
@@ -17,12 +17,12 @@ def load_preferences(filename: str):
         print("Error: Failed to decode JSON data.")
         return {}
 
+# load in recipes file
 def load_recipes(filename: str):
     try:
-        with open('recipes1.json') as file:
+        with open(filename, mode='r') as file:
             recipes_data = json.load(file)
         print("recipes loaded successfully.\n")  # Temporary print for validation
-        #print(recipes)  # can delete these lines later
         return recipes_data['recipes']
     except FileNotFoundError:
         print("Error: recipes JSON file not found.")
@@ -31,11 +31,11 @@ def load_recipes(filename: str):
         print("Error: Failed to decode JSON data.")
         return {}
 
-
-def load_ingredients(file_path):
+# load in ingredients file
+def load_ingredients(filename: str):
     ingredients = {}
     
-    with open('ingredients1.csv') as file:
+    with open(filename, mode='r') as file:
         reader = csv.DictReader(file)
         
         # Clean the fieldnames (headers) to remove any leading/trailing spaces
@@ -45,15 +45,15 @@ def load_ingredients(file_path):
             # Check if 'ingredient' exists in the row
             ingredient_name = row.get('ingredient', '').strip().lower() if 'ingredient' in row else ''
             
-            # Skip this row if the ingredient is missing
+            # Skip if the ingredient is missing
             if not ingredient_name:
                 print("Skipping row due to missing ingredient.")
                 continue
 
-            # Check if 'quantity' exists in the row and is a valid value
-            quantity = row.get('quantity', None)  # Default to None if quantity is missing
-            if quantity is None or quantity == '':  # If 'quantity' is missing or empty
-                quantity = 1.0  # Set to default value (1.0)
+            # validation check for quantity, set quanitity to 0 if it is missing
+            quantity = row.get('quantity', None) 
+            if quantity is None or quantity == '': 
+                quantity = 0 
 
             # Ensure that quantity is a valid number
             try:
@@ -63,7 +63,7 @@ def load_ingredients(file_path):
                 quantity = 1.0  # Default to 1.0 if there's an invalid value
 
             # Check if 'unit' exists, default to empty string if missing
-            unit = row.get('unit', '')  # Default to empty string if no unit is provided
+            unit = row.get('unit', '')
             
             ingredients[ingredient_name] = {
                 'quantity': quantity,
@@ -72,9 +72,6 @@ def load_ingredients(file_path):
     
     return ingredients
 
-
-
-    
 #obligatory promts user and returns selected_diet
 def pick_preference(preferences):
     available_diets = [pref["diet"] for pref in preferences.get("user_preferences", [])]
@@ -99,7 +96,7 @@ def pick_preference(preferences):
         print("Invalid input. Please enter a number.")
         return None     
     
-#function return preference FIX 
+#function return preference
 def recommend_recipes(recipes, preferences):
     # Create mapping full diet names and tags
     diet_tag_mapping = {
@@ -155,10 +152,12 @@ def pick_from_sorted(recipes, preferences):
         user_input = input("Enter the number of the recipe to pick, 'all' to add all remaining recipes, or 'done' to finish: ").strip().lower()
         
         if user_input == "all":
+            # Add all remaining recipes to the selected list
             selected_recipes.extend(available_recipes)
             print("All remaining recipes added.")
             break
         elif user_input == "done":
+            # Finish the selection process
             print("Recipe selection finished.")
             break
         else:
@@ -181,36 +180,6 @@ def pick_from_sorted(recipes, preferences):
 
     return selected_recipes
 
-'''
-def calculate_nutrition(selected_recipes, ingredients):
-    nutrition_summary = {}
-
-    for recipe in selected_recipes:
-        recipe_name = recipe['name']
-        total_nutrition = {"calories": 0, "protein": 0, "carbs": 0, "fat": 0, "fiber": 0}
-
-        for ingredient in recipe["ingredients"]:
-            ingredient_name = get_cleaned_ingredient_name(ingredient[0])  # Clean the ingredient name
-
-            # Check if the cleaned ingredient name exists in the nutritional data
-            if ingredient_name in ingredients:
-                nutrition_info = ingredients[ingredient_name]
-
-                # Sum nutritional values
-                total_nutrition['calories'] += nutrition_info['calories']
-                total_nutrition['protein'] += nutrition_info['protein']
-                total_nutrition['carbs'] += nutrition_info['carbs']
-                total_nutrition['fat'] += nutrition_info['fat']
-                total_nutrition['fiber'] += nutrition_info['fiber']
-            else:
-                print(f"Warning: Nutritional data missing for {ingredient_name}")
-
-        nutrition_summary[recipe_name] = total_nutrition
-
-    return nutrition_summary
-'''
-
-
 def create_meal_plan(selected_recipes, selected_diet, output_filename='meal_plan.txt'):
     # Daily calorie limit from the selected diet with a ±200 range
     calorie_limit = selected_diet["nutritional_goals"]["calories"]
@@ -222,8 +191,7 @@ def create_meal_plan(selected_recipes, selected_diet, output_filename='meal_plan
     day_nutrition_totals = {day: {"calories": 0, "protein": 0, "carbs": 0, "fat": 0, "fiber": 0} for day in meal_plan}
 
     # List of available recipes
-    #recipes = list(selected_recipes_nutrition.items())
-    recipe_nutrition_dict = {recipe["name"]: recipe["nutrition"] for recipe in selected_recipes}
+    recipes = {recipe["name"]: recipe["nutrition"] for recipe in selected_recipes}
 
     # Protects from infinite loop
     MAX_ATTEMPTS = 100
@@ -257,7 +225,7 @@ def create_meal_plan(selected_recipes, selected_diet, output_filename='meal_plan
                 else:
                     break  # Stop adding if the upper calorie limit would be exceeded
 
-    # Write meal plan to a file
+    # Write meal plan to meal_plan.txt
     with open(output_filename, 'w') as file:
         for day, recipes in meal_plan.items():
             file.write(f"\n{day}:\n")
@@ -275,68 +243,20 @@ def create_meal_plan(selected_recipes, selected_diet, output_filename='meal_plan
 
     print(f"Meal plan has been written to {output_filename}")
     return day_nutrition_totals
-    
-'''
-from collections import Counter
 
-def load_recipes_from_text(file_path):
-    #recipes and ingredients the text file
-    recipes_ingredients = {}
-    with open(file_path, 'r') as file:
-        for line in file:
-            if ':' in line:
-                recipe_name, rest = line.split(':', 1)
-                ingredients_part = rest.split('}{')[-1].strip(' }{\n')  # Extract ingredients 
-                ingredients = [ingredient.strip() for ingredient in ingredients_part.split(',')]
-                recipes_ingredients[recipe_name.strip()] = ingredients
-    return recipes_ingredients
-
-def count_recipe_occurrences(meal_plan_file):
-    # Count occurrences recipe in the meal_plan.txt
-    recipe_counter = Counter()
-    with open(meal_plan_file, 'r') as file:
-        for line in file:
-            line = line.strip()
-            if line.startswith('-'):
-                recipe = line[1:].strip()  # Remove whitespace
-                recipe_counter[recipe] += 1
-    return recipe_counter
-
-
-# import csv
-
-def parse_ingredient_units(ingredient_file):
-    ingredient_units = {}
-    try:
-        with open(ingredient_file, 'r') as file:
-            reader = csv.DictReader(file)
-            for row in reader:
-                ingredient = row['ingredient'].strip()  # Ingredient name
-                #unit = row['unit'].strip()  # Unit of measurement
-                #ingredient_units[ingredient] = unit
-                # print(f"Loaded unit for {ingredient}: {unit}")  # Debugging the units
-    except Exception as e:
-        print(f"Error reading ingredient file: {e}")
-    
-    return ingredient_units
-
-'''
-
-
-
-
-
+# go through recipes
 def parse_recipes(recipes_file):
     try:
         with open(recipes_file, 'r') as file:
             data = json.load(file)
-        # Recipes are in the 'recipes' list, each with a 'name' and 'ingredients'
+        # Recipes are in the 'recipes' list, contain 'name', 'ingredients', and 'quantity'
         recipes = {recipe['name']: {ingredient['ingredient']: ingredient['quantity'] for ingredient in recipe['ingredients']} for recipe in data['recipes']}
         return recipes
     except Exception as e:
         print(f"Error reading recipes file: {e}")
         return {}  
 
+# recipes were printing with "-", this fixes that
 def parse_meal_plan(meal_plan_file):
     meal_plan = {}
     
@@ -347,9 +267,10 @@ def parse_meal_plan(meal_plan_file):
             if not line:
                 continue
 
-            # Check if the line starts with "- ", indicating a recipe entry
+            # Check if the line starts with "- ", removes
             if line.startswith('-'):
-                recipe_name = line[1:].strip()  # Remove leading "- " to get the recipe name
+                recipe_name = line[1:].strip()
+                # counts occurences
                 if recipe_name in meal_plan:
                     meal_plan[recipe_name] += 1
                 else:
@@ -357,18 +278,14 @@ def parse_meal_plan(meal_plan_file):
     
     return meal_plan
 
-   
+
 def generate_shopping_list(meal_plan_file, recipes_file, ingredient_file, output_filename='meal_plan.txt'):
-    # Load recipes from the JSON file
+    # Load recipes from the JSON file and user_available ingredients from CSV file
     recipes = load_recipes(recipes_file)
-
-    # Parse the meal plan to get the list of recipes and their occurrences
-    meal_plan = parse_meal_plan(meal_plan_file)
-
-    # Load available ingredients from the CSV file
     available_ingredients = load_ingredients(ingredient_file)
 
-    # Initialize an empty shopping list
+    meal_plan = parse_meal_plan(meal_plan_file)
+
     shopping_list = {}
 
     # Aggregate ingredient quantities for each recipe in the meal plan
@@ -380,21 +297,20 @@ def generate_shopping_list(meal_plan_file, recipes_file, ingredient_file, output
             ingredients = recipe["ingredients"]
 
             for ingredient in ingredients:
-                ingredient_name = ingredient["ingredient"].strip().lower()  # Normalize the ingredient name
+                ingredient_name = ingredient["ingredient"].strip().lower()
                 required_quantity = ingredient["quantity"] * count  # Total quantity required for the meal plan
                 unit = ingredient.get("unit", "unit")  # Extract unit from the recipe ingredient data
 
-                # Check if the ingredient is available in the ingredients CSV
+                # Checks if the ingredient is in the ingredients CSV
                 if ingredient_name in available_ingredients:
                     available_quantity = available_ingredients[ingredient_name]['quantity']
                 else:
-                    available_quantity = 0  # If not found in the CSV, assume no available quantity
+                    available_quantity = 0
 
-                # Calculate the remaining quantity needed for the shopping list
+                # Subtracts total needed ingredients in recipes with the ingredients the user has
                 remaining_quantity = max(0, required_quantity - available_quantity)
 
                 if remaining_quantity > 0:
-                    # Add to shopping list (if not already present, initialize the quantity)
                     if ingredient_name in shopping_list:
                         shopping_list[ingredient_name]['quantity'] += remaining_quantity
                     else:
@@ -403,7 +319,7 @@ def generate_shopping_list(meal_plan_file, recipes_file, ingredient_file, output
                             'unit': unit
                         }
 
-    # Write the shopping list to the output file
+    # Write the shopping list to meal_plan.txt
     try:
         with open(output_filename, 'a') as file:
             file.write("\nShopping List:\n")
@@ -420,8 +336,7 @@ def generate_shopping_list(meal_plan_file, recipes_file, ingredient_file, output
     except Exception as e:
         print(f"Error appending shopping list: {e}")
 
-
-'''
+# Import "matplotlib.pyplot"
 import matplotlib.pyplot as plt
 
 def plot_day_nutrition_totals(day_nutrition_totals):
@@ -449,44 +364,30 @@ def plot_day_nutrition_totals(day_nutrition_totals):
     plt.xticks(rotation=45)
     plt.tight_layout()
     plt.show()
-    
-    '''
 
 def main():
     # Load data files
-    preferences = load_preferences('preferences.json')
-    recipes = load_recipes('recipes.json')
-    ingredients = load_ingredients('ingredients.csv')
+    preferences = load_preferences('preferences1.json')
+    recipes = load_recipes('recipes1.json')
 
-    #These all work beautifully
-    
-    #revelation starts here!!!!
+    # User selects their preferred diet
     selected_diet = pick_preference(preferences)
-    #print(selected_diet)
-    #^^^ can then pass selected diet instead go back and fix
     preferences['selected_preference'] = selected_diet
 
-    #Recommend recipes based on user preference
-    #print("recipes recommended by preference")
+    # Recommend recipes based on user preference
     recommended_recipes = recommend_recipes(recipes, preferences)
     
+    # Allow the user to pick recipes for meal planning
+    selected_recipes = pick_from_sorted(recommended_recipes, preferences)
     
-    #Allow the user to pick recipes for meal planning
-    # print("select preference to see available recipes")
-    selected_recipes = pick_from_sorted(recipes, preferences)
-    
-    '''
-    selected_recipes_nutrition = calculate_nutrition(selected_recipes, ingredients)
-    #print(selected_recipes_nutrition)
-    '''
     #creates semi random meal plan with nutrition and selected diet in mind
-    day_nutrition_totals = create_meal_plan(recipes, selected_diet)
+    day_nutrition_totals = create_meal_plan(selected_recipes, selected_diet)
     
     #generates shopping list based on # of occurences of ingredient 
-    generate_shopping_list('meal_plan.txt', 'recipes.json', 'ingredients.csv')
+    generate_shopping_list('meal_plan.txt', 'recipes1.json', 'ingredients1.csv')
     
     #uses matplot to plot the daily nutrients 
-    #plot_day_nutrition_totals(day_nutrition_totals)
+    plot_day_nutrition_totals(day_nutrition_totals)
     
 if __name__ == "__main__":
     main()
