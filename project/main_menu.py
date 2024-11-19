@@ -7,7 +7,7 @@ def load_preferences(filename: str):
     try:
         with open(filename, mode='r') as file:
             preferences = json.load(file)
-        print("Preferences loaded successfully.\n")  # Temporary print for validation
+        #print("Preferences loaded successfully.\n")  # Temporary print for validation
         #print(preferences)  # can delete these lines later
         return preferences
     except FileNotFoundError:
@@ -45,7 +45,7 @@ def load_recipes(filename: str):
                     })
                 except ValueError:
                     print(f"Skipping invalid line: {line}")
-        print("Recipes loaded successfully.\n")  # Temporary print validation
+        #print("Recipes loaded successfully.\n")  # Temporary print validation
         #print(recipes)  # Delete this later?
         return recipes
     except FileNotFoundError:
@@ -63,7 +63,7 @@ def load_ingredients(filename: str):
             for row in reader:
                 # Each row dictionary with column headers
                 ingredients.append({key.strip(): value.strip() for key, value in row.items()})
-        print("Ingredients loaded successfully.\n")  # Temporary validation print
+        #print("Ingredients loaded successfully.\n")  # Temporary validation print
         #print(ingredients)  # Delete this line later
         return ingredients
     except FileNotFoundError:
@@ -229,8 +229,10 @@ def calculate_nutrition(selected_recipes, ingredients):
 
 
 def create_meal_plan(selected_recipes_nutrition, selected_diet, output_filename='meal_plan.txt'):
-    # Daily calorie limit from the selected diet
+    # Daily calorie limit from the selected diet with a ±200 range
     calorie_limit = selected_diet["nutritional_goals"]["calories"]
+    lower_calorie_limit = calorie_limit - 200
+    upper_calorie_limit = calorie_limit + 200
 
     # 7-day meal plan
     meal_plan = {day: [] for day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]}
@@ -239,27 +241,28 @@ def create_meal_plan(selected_recipes_nutrition, selected_diet, output_filename=
     # List of available recipes
     recipes = list(selected_recipes_nutrition.items())
 
-    #Protects from infinite loop
-    MAX_ATTEMPTS = 50
-    attempt_count = 0
+    # Protects from infinite loop
+    MAX_ATTEMPTS = 100
 
     # Meal plan random no repeats for each day
     for day in meal_plan.keys():
         used_recipes = set()  # Track used recipes for the day
-        #Test message
+        attempt_count = 0  # Reset the attempt count for each day
         print(f"Creating meal plan for {day}.")
 
-        while day_nutrition_totals[day]["calories"] < calorie_limit:
+        while day_nutrition_totals[day]["calories"] < lower_calorie_limit or (
+            day_nutrition_totals[day]["calories"] < upper_calorie_limit
+        ):
             if attempt_count >= MAX_ATTEMPTS:
                 print(f"Too many attempts to fill {day}'s meal plan. Exiting.")
                 break
             recipe_name, nutrition = random.choice(recipes)  # Randomly select a recipe
             attempt_count += 1
 
-            # Check if recipe already used daily
+            # Check if recipe already used for the day
             if recipe_name not in used_recipes:
-                # Check if adding the recipe would exceed the calorie limit
-                if day_nutrition_totals[day]["calories"] + nutrition["calories"] <= calorie_limit:
+                # Check if adding the recipe would keep within the upper calorie limit
+                if day_nutrition_totals[day]["calories"] + nutrition["calories"] <= upper_calorie_limit:
                     # Add recipe to the current day
                     meal_plan[day].append(recipe_name)
                     used_recipes.add(recipe_name)  # Mark recipe as used
@@ -268,7 +271,7 @@ def create_meal_plan(selected_recipes_nutrition, selected_diet, output_filename=
                     for key in day_nutrition_totals[day]:
                         day_nutrition_totals[day][key] += nutrition[key]
                 else:
-                    break  # Stop adding if the calorie limit would be exceeded
+                    break  # Stop adding if the upper calorie limit would be exceeded
 
     # Write meal plan to a file
     with open(output_filename, 'w') as file:
@@ -287,8 +290,8 @@ def create_meal_plan(selected_recipes_nutrition, selected_diet, output_filename=
                 file.write("  No recipes available for this day.\n")
 
     print(f"Meal plan has been written to {output_filename}")
-
-
+    return day_nutrition_totals
+    
 from collections import Counter
 
 def load_recipes_from_text(file_path):
@@ -314,30 +317,81 @@ def count_recipe_occurrences(meal_plan_file):
                 recipe_counter[recipe] += 1
     return recipe_counter
 
-def generate_shopping_list(meal_plan_file, recipes_file, output_filename='meal_plan.txt'):
-    #Load recipes and their ingredients
+def generate_shopping_list(meal_plan_file, recipes_file, ingredients_file, output_filename='meal_plan.txt'):
+    # Load recipes and their ingredients
     recipes_ingredients = load_recipes_from_text(recipes_file)
     
-    #Count times appears in the meal plan
+    # Count occurrences of each recipe in the meal plan
     recipe_occurrences = count_recipe_occurrences(meal_plan_file)
+    
+    # Load ingredient data with quantities and units
+    ingredients_data = load_ingredients(ingredients_file)
+    ingredient_details = {
+        item['ingredient'].lower(): {
+            "quantity": float(item.get('quantity', 1)),
+            "unit": item.get('unit', '')
+        }
+        for item in ingredients_data
+    }
 
-    #Aggregate ingredient occurrences
-    shopping_list = Counter()
+    # Aggregate ingredient occurrences
+    shopping_list = {}
     for recipe, count in recipe_occurrences.items():
         if recipe in recipes_ingredients:
             for ingredient in recipes_ingredients[recipe]:
-                shopping_list[ingredient] += count
-        else:
-            print(f"Warning: '{recipe}' not found in recipes_ingredients.")
+                ingredient_lower = ingredient.lower()
+                if ingredient_lower in ingredient_details:
+                    # Calculate total quantity based on recipe occurrence
+                    total_quantity = count * ingredient_details[ingredient_lower]["quantity"]
+                    unit = ingredient_details[ingredient_lower]["unit"]
+                    
+                    # Aggregate the quantities 
+                    if ingredient_lower in shopping_list:
+                        shopping_list[ingredient_lower]["total_quantity"] += total_quantity
+                    else:
+                        shopping_list[ingredient_lower] = {
+                            "total_quantity": total_quantity,
+                            "unit": unit
+                        }
+                else:
+                    print(f"Warning: '{ingredient}' not found in ingredients data.")
 
-    #Write to the file meal_plan.txt for call after meal planned
-    with open(output_filename, 'a') as file:  # Append to existing file
+    # Write shopping list same file
+    with open(output_filename, 'a') as file:  # Append file
         file.write("\nShopping List:\n")
-        for ingredient, count in shopping_list.items():
-            file.write(f"{ingredient}: {count}x\n")
+        for ingredient, details in shopping_list.items():
+            file.write(f"{ingredient}: {details['total_quantity']} {details['unit']}\n")
 
-    print("Shopping list generated to the output file.")
+    print("Shopping list generated and written to the output file.")
 
+import matplotlib.pyplot as plt
+
+def plot_day_nutrition_totals(day_nutrition_totals):
+    # Prepare data for plotting
+    days = list(day_nutrition_totals.keys())
+    calories = [day_nutrition_totals[day]['calories'] for day in days]
+    protein = [day_nutrition_totals[day]['protein'] for day in days]
+    carbs = [day_nutrition_totals[day]['carbs'] for day in days]
+    fat = [day_nutrition_totals[day]['fat'] for day in days]
+    fiber = [day_nutrition_totals[day]['fiber'] for day in days]
+
+    #Plotting 
+    plt.figure(figsize=(10, 6))
+    
+    plt.bar(days, calories, label='Calories', color='red')
+    plt.bar(days, protein, bottom=calories, label='Protein', color='blue')
+    plt.bar(days, carbs, bottom=[calories[i] + protein[i] for i in range(len(days))], label='Carbs', color='green')
+    plt.bar(days, fat, bottom=[calories[i] + protein[i] + carbs[i] for i in range(len(days))], label='Fat', color='orange')
+    plt.bar(days, fiber, bottom=[calories[i] + protein[i] + carbs[i] + fat[i] for i in range(len(days))], label='Fiber', color='purple')
+    #Labels
+    plt.xlabel('Days of the Week')
+    plt.ylabel('Nutritional Values')
+    plt.title('Daily Nutrition Totals (Stacked Bar Graph)')
+    plt.legend()
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()
+    
 def main():
     # Load data files
     preferences = load_preferences('preferences.json')
@@ -359,16 +413,19 @@ def main():
     #Allow the user to pick recipes for meal planning
     # print("select preference to see available recipes")
     selected_recipes = pick_from_sorted(recommended_recipes, preferences)
-    #print (selected_recipes)
+    
     
     selected_recipes_nutrition = calculate_nutrition(selected_recipes, ingredients)
     #print(selected_recipes_nutrition)
     
     #creates semi random meal plan with nutrition and selected diet in mind
-    create_meal_plan(selected_recipes_nutrition, selected_diet)
+    day_nutrition_totals=create_meal_plan(selected_recipes_nutrition, selected_diet)
     
     #generates shopping list based on # of occurences of ingredient 
-    generate_shopping_list('meal_plan.txt', 'recipes.txt')
+    generate_shopping_list('meal_plan.txt', 'recipes.txt', 'ingredients.csv')
+    
+    #uses matplot to plot the daily nutrients 
+    plot_day_nutrition_totals(day_nutrition_totals)
     
 if __name__ == "__main__":
     main()
@@ -377,7 +434,11 @@ if __name__ == "__main__":
 implement a limiter for different nutritional values. SHOULD have started from "selected_diet before continuing
 on. Some of the menu items repeat within the same day, maybe dont allow that? larger input sets would help
 smooth out output.DATA on ingredients/preferences could be tweaked to be more realistic on food intake. Lost team
-member late in the game. '''
+member late in the game.
+-restraints for meal planner can be tightened from the .json
+-or using the lower_limit and upper_limit on calories
+-or by adjusting the MAX counter to give more attempts at filling the caloric restraints
+-meal planner currently focuses on calories '''
 
 
 
