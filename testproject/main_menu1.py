@@ -140,6 +140,34 @@ def pick_from_sorted(recipes, preferences):
     selected_recipes = []  # List to store the selected recipes
     available_recipes = recipes[:]  # Copy of recommended recipes to track remaining options
 
+    #USER TAKES OUT RECIPES
+    while available_recipes:
+        # Display available recipes with numbering
+        print("\nAre there any recipes that you DONT want on the meal plan:")
+        for index, recipe in enumerate(available_recipes, start=1):
+            ingredients_list = ", ".join([ingredient['ingredient'] for ingredient in recipe["ingredients"]])  # Corrected ingredient extraction
+            print(f"{index}. {recipe['name']} (Ingredients: {len(recipe['ingredients'])})")
+            print(f"   Ingredients: {ingredients_list}\n")
+
+        # Prompt the user to pick a recipe or add all remaining recipes
+        user_input = input("Enter the number of the recipe to pick or 'done' to finish: ").strip().lower()
+        
+        if user_input == "done":
+            # Finish the selection process
+            print("Done.")
+            break
+        else:
+            try:
+                choice = int(user_input)
+                if 1 <= choice <= len(available_recipes):
+                    selected_recipes.remove(available_recipes.pop(choice - 1))
+                    print(f"{selected_recipes[-1]['name']} has been added to your list.")
+                else:
+                    print("Invalid selection. Please enter a valid number.")
+            except ValueError:
+                print("Invalid input. Please enter a number or 'done'.")
+
+    #USER PICKS WHAT RECIPES THEY WANT
     while available_recipes:
         # Display available recipes with numbering
         print("\nAvailable recipes to pick from:")
