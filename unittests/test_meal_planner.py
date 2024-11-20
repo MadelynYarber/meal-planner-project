@@ -52,54 +52,6 @@ class TestMealPlanner(unittest.TestCase):
         selected_diet = {"user_preferences": {"vegan"}, "nutritional_goals":{"calories": 1400, "protein": 60, "carbs": 210, "fat": 50, "fiber": 35}}
         meal_plan = create_meal_plan(recipes, selected_diet)
         self.assertEqual(len(meal_plan), 7)  # Meal plan should have 7 days
-
-    '''def parse_meal_plan(meal_plan_file):
-        meal_plan = {}
-    
-        with open(meal_plan_file, 'r') as file:
-            for line in file:
-                # Remove leading/trailing spaces and skip empty lines
-                line = line.strip()
-                if not line:
-                    continue
-
-                # Check if the line starts with "- ", removes
-                if line.startswith('-'):
-                    recipe_name = line[1:].strip()
-                    # counts occurences
-                    if recipe_name in meal_plan:
-                        meal_plan[recipe_name] += 1
-                    else:
-                        meal_plan[recipe_name] = 1
-    
-        return meal_plan
-
-    # Test generate_shopping_list
-    def test_generate_shopping_list(self):
-        recipes = [
-            {"name": "Grilled Cheese", "ingredients": [
-          {"ingredient": "white bread", "quantity": 2, "unit": "slice"},
-          {"ingredient": "sliced cheese", "quantity": 2, "unit": "slice"}]}
-        ]
-        
-        available_ingredients = {
-            "sliced cheese": { "quantity": 16}
-        }
-
-
-
-        #def parse_meal_plan(filepath):
-            #return meal_plan
-
-        shopping_list_output = generate_shopping_list(meal_plan, "testproject/recipes1.json", "testproject/ingredients1.csv")
-
-        expected_output = (
-            "Shopping List:\n"
-            "white bread: 4 slices \n"
-        )
-        self.assertEqual(shopping_list_output, expected_output)
-'''
-# Struggling with Shopping list function
     
 if __name__ == '__main__':
     unittest.main()
