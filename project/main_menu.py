@@ -84,18 +84,18 @@ def pick_preference(preferences):
     for index, diet in enumerate(available_diets, start=1):
         print(f"{index}. {diet}")
     
-    try:
-        choice = int(input("Please select a dietary preference by number: "))
-        if 1 <= choice <= len(available_diets):
-            selected_diet = preferences["user_preferences"][choice - 1]
-            print(f"You have selected the {selected_diet['diet']} diet.")
-            return selected_diet
-        else:
-            print("Invalid selection. Please try again.")
-            return None
-    except ValueError:
-        print("Invalid input. Please enter a number.")
-        return None   
+    while True:
+        try:
+            choice = int(input("Please select a dietary preference by number: "))
+            if 1 <= choice <= len(available_diets):
+                selected_diet = preferences["user_preferences"][choice - 1]
+                print(f"You have selected the {selected_diet['diet']} diet.")
+                return selected_diet
+            else:
+                print("Invalid selection. Please try again.")
+        except ValueError:
+            print("Invalid input. Please enter a number.")
+            
 # XAVIER-----
 #function return preference
 def recommend_recipes(recipes, preferences):
