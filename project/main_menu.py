@@ -4,6 +4,7 @@ import csv
 import random
 
 # load in preferences file
+#MADDIE----
 def load_preferences(filename: str):
     try:
         with open(filename, mode='r') as file:
@@ -95,7 +96,7 @@ def pick_preference(preferences):
     except ValueError:
         print("Invalid input. Please enter a number.")
         return None   
-    
+# XAVIER-----
 #function return preference
 def recommend_recipes(recipes, preferences):
     # Create mapping full diet names and tags
@@ -271,7 +272,7 @@ def create_meal_plan(selected_recipes, selected_diet, output_filename='meal_plan
 
     print(f"Meal plan has been written to {output_filename}")
     return day_nutrition_totals
-
+#MADDIE--------
 # go through recipes
 def parse_recipes(recipes_file):
     try:
@@ -363,7 +364,7 @@ def generate_shopping_list(meal_plan_file, recipes_file, ingredient_file, output
         print(f"Shopping list has been successfully appended to {output_filename}.")
     except Exception as e:
         print(f"Error appending shopping list: {e}")
-
+#XAVIER-------
 # Import "matplotlib.pyplot"
 import matplotlib.pyplot as plt
 
@@ -394,6 +395,7 @@ def plot_day_nutrition_totals(day_nutrition_totals):
     plt.show()
 
 def main():
+    #MADDIE-------
     # Load data files
     preferences = load_preferences('preferences.json')
     recipes = load_recipes('recipes.json')
@@ -401,7 +403,7 @@ def main():
     # User selects their preferred diet
     selected_diet = pick_preference(preferences)
     preferences['selected_preference'] = selected_diet
-
+    #XAVIER------
     # Recommend recipes based on user preference
     recommended_recipes = recommend_recipes(recipes, preferences)
     
@@ -410,10 +412,12 @@ def main():
     
     #creates semi random meal plan with nutrition and selected diet in mind
     day_nutrition_totals = create_meal_plan(selected_recipes, selected_diet)
-    
+
+    #MADDIE----
     #generates shopping list based on # of occurences of ingredient 
     generate_shopping_list('meal_plan.txt', 'recipes.json', 'ingredients.csv')
-    
+
+    #XAVIER-----
     #uses matplot to plot the daily nutrients 
     plot_day_nutrition_totals(day_nutrition_totals)
     
