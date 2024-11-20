@@ -5,14 +5,14 @@ This project is a meal planning application that recommends recipes, creates mea
 ## Setup (what she has in her example)
 1. Clone the repository
 2. Install the required packages
-~~example she gives: pip install -r requirements.txt
-3. Ensure you have 'ingredients.csv', 'preferences.json', and 'recipes.txt' in the project directory
+pip install -r requirements.txt
+3. Ensure you have 'ingredients.csv', 'preferences.json', and 'recipes.json' in the project directory
 4. Run the main script
-example: python main_menu.py
+python main_menu.py
 
 ## Running Tests
 To run the unit tests:
-~~her example: python -m unittest test_myProject.py
+python -m unittest unittests.test_meal_planner.py
 
 ## Features
 - User can set or update their preferences on diet and nutrition
@@ -23,9 +23,8 @@ To run the unit tests:
 
 ## File Structure 
 - 'main_menu.py': Main script containing a display menu where user can choose options and their correlating functions
-- 'ingredients.csv': CSV file containing available ingredients and the ingredients nutrition
-- 'recipes.txt': TXT file containing the recipes, the type of diets the meal pertains to, and the ingredients that the meal contains
+- 'ingredients.csv': CSV file containing available ingredients, the quantity, and unit
+- 'recipes.json': JSON file containing the recipes, the type of diets the meal pertains to, the ingredients that the meal contains, ingredient quantity, and nutritional information of that meal
 - 'preferences.json': JSON file containing user preferences and nutritional goals
 - 'requirements.txt': List of required Python packages
-# need to add unit test file name here
-# her example: 'test_myProject.py': Unit tests for the project
+- 'test_meal_planner.py': Unit test file for the project
