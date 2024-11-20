@@ -1,119 +1,91 @@
 
 Monday:
-  - Vegan Stir fry
-  - Potato Soup
-  - Roasted Vegetables
+  - Grilled Cheese
+  - Beans and Rice
+  - Avocado Toast
   - Strawberry Smoothie
-  - Vegan Stuffed Bell Peppers
-  - Oatmeal with fruit
 Total Nutritional Values for the day:
-  Calories: 1547.4 kcal
-  Protein: 52.3 g
-  Carbs: 307.7 g
-  Fat: 12.1 g
-  Fiber: 49.5 g
+  Calories: 1287 kcal
+  Protein: 40.3 g
+  Carbs: 166.2 g
+  Fat: 48.3 g
+  Fiber: 23.1 g
 
 Tuesday:
-  - Fruit Bowl
   - Strawberry Smoothie
-  - Oatmeal with fruit
-  - Vegan Stuffed Bell Peppers
-  - Cabbage and Carrot Slaw
-  - Potato Soup
-  - Vegan Stir fry
+  - Beans and Rice
+  - Avocado Toast
+  - Grilled Cheese
 Total Nutritional Values for the day:
-  Calories: 1661.4 kcal
-  Protein: 49.4 g
-  Carbs: 320.3 g
-  Fat: 22.7 g
-  Fiber: 51.1 g
+  Calories: 1287 kcal
+  Protein: 40.3 g
+  Carbs: 166.2 g
+  Fat: 48.3 g
+  Fiber: 23.1 g
 
 Wednesday:
-  - Oatmeal with fruit
+  - Grilled Cheese
   - Beans and Rice
-  - Roasted Vegetables
-  - Potato Soup
-  - Vegan Stuffed Bell Peppers
-  - Cabbage and Carrot Slaw
+  - Strawberry Smoothie
+  - Avocado Toast
 Total Nutritional Values for the day:
-  Calories: 1746.9 kcal
-  Protein: 62.5 g
-  Carbs: 332.5 g
-  Fat: 19.7 g
-  Fiber: 60.5 g
+  Calories: 1287 kcal
+  Protein: 40.3 g
+  Carbs: 166.2 g
+  Fat: 48.3 g
+  Fiber: 23.1 g
 
 Thursday:
-  - Vegan Stuffed Bell Peppers
-  - Oatmeal with fruit
-  - Roasted Vegetables
-  - Vegan Stir fry
+  - Grilled Cheese
   - Strawberry Smoothie
   - Beans and Rice
+  - Avocado Toast
 Total Nutritional Values for the day:
-  Calories: 1760.5 kcal
-  Protein: 65.5 g
-  Carbs: 343.7 g
-  Fat: 13.0 g
-  Fiber: 57.8 g
+  Calories: 1287 kcal
+  Protein: 40.3 g
+  Carbs: 166.2 g
+  Fat: 48.3 g
+  Fiber: 23.1 g
 
 Friday:
-  - Fruit Bowl
-  - Potato Soup
+  - Beans and Rice
+  - Grilled Cheese
   - Strawberry Smoothie
-  - Roasted Vegetables
-  - Vegan Stuffed Bell Peppers
-  - Vegan Stir fry
-  - Cabbage and Carrot Slaw
+  - Avocado Toast
 Total Nutritional Values for the day:
-  Calories: 1626.4 kcal
-  Protein: 48.9 g
-  Carbs: 325.7 g
-  Fat: 17.7 g
-  Fiber: 51.8 g
+  Calories: 1287 kcal
+  Protein: 40.3 g
+  Carbs: 166.2 g
+  Fat: 48.3 g
+  Fiber: 23.1 g
 
 Saturday:
-  - Vegan Stir fry
   - Beans and Rice
-  - Potato Soup
-  - Cabbage and Carrot Slaw
-  - Vegan Stuffed Bell Peppers
-  - Oatmeal with fruit
+  - Strawberry Smoothie
+  - Grilled Cheese
+  - Avocado Toast
 Total Nutritional Values for the day:
-  Calories: 1796.4 kcal
-  Protein: 63.7 g
-  Carbs: 340.5 g
-  Fat: 20.0 g
-  Fiber: 56.5 g
+  Calories: 1287 kcal
+  Protein: 40.3 g
+  Carbs: 166.2 g
+  Fat: 48.3 g
+  Fiber: 23.1 g
 
 Sunday:
-  - Vegan Stuffed Bell Peppers
-  - Potato Soup
   - Beans and Rice
-  - Oatmeal with fruit
-  - Roasted Vegetables
-  - Cabbage and Carrot Slaw
+  - Grilled Cheese
+  - Avocado Toast
+  - Strawberry Smoothie
 Total Nutritional Values for the day:
-  Calories: 1746.9 kcal
-  Protein: 62.5 g
-  Carbs: 332.5 g
-  Fat: 19.7 g
-  Fiber: 60.5 g
+  Calories: 1287 kcal
+  Protein: 40.3 g
+  Carbs: 166.2 g
+  Fat: 48.3 g
+  Fiber: 23.1 g
 
 Shopping List:
-rice: 16x
-broccoli: 10x
-carrot: 15x
-soy sauce: 5x
-potato: 11x
-onion: 13x
-garlic: 6x
-celery: 6x
-strawberries: 12x
-almond milk: 10x
-bell pepper: 7x
-black beans: 11x
-oats: 6x
-grapes: 2x
-pineapple: 2x
-cabbage: 5x
-mayonnaise: 5x
+black beans: 7 cups
+rice: 2.0 cups
+avocado: 7 avocados
+strawberries: 5.0 cups
+almond milk: 7 cups
