@@ -2,7 +2,7 @@
 
 This project is a meal planning application that recommends recipes, creates meal plans, generates shopping lists, and provides nutritional analysis.
 
-## Setup (what she has in her example)
+## Setup
 1. Clone the repository
 2. Install the required packages
 pip install -r requirements.txt
