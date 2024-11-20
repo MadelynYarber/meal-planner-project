@@ -88,39 +88,6 @@ def pick_preference(preferences):
         if 1 <= choice <= len(available_diets):
             selected_diet = preferences["user_preferences"][choice - 1]
             print(f"You have selected the {selected_diet['diet']} diet.")
-            print(f"Current Calories Goal: {selected_diet['nutritional_goals']['calories']} kcal")
-
-            change_calories = input("Do you want to change your calorie goal? (yes/no): ").strip().lower()
-            if change_calories == "yes":
-                while True:
-                    new_calories = input("Enter the new calorie goal: ")
-                    try:
-                        new_calories = int(new_calories)
-                        if new_calories < 1000 or new_calories > 3000:
-                            print("Please enter a calorie goal between 1000 and 3000")
-                        else:    
-                            selected_diet['nutritional_goals']['calories'] = new_calories
-                            #calculate the percentages of the other nutrients
-                            protien_perc = 0.20 * new_calories
-                            new_protien = protien_perc / 4
-                            selected_diet['nutritional_goals']['protien'] = int(new_protien)
-
-                            carb_perc = 0.50 * new_calories
-                            new_carbs = carb_perc / 4
-                            selected_diet['nutritional_goals']['carbs'] = int(new_carbs)
-                            
-                            fat_perc = 0.30 * new_calories
-                            new_fat = fat_perc / 9 
-                            selected_diet['nutritional_goals']['fat'] = int(new_fat)
-
-                            print(f"New calorie goal: {selected_diet['nutritional_goals']['calories']} kcal")
-                            print(f"New protien goal: {selected_diet['nutritional_goals']['protien']} g")
-                            print(f"New carb goal: {selected_diet['nutritional_goals']['carbs']} g")
-                            print(f"New fat goal: {selected_diet['nutritional_goals']['fat']} g")
-                            break
-                    except ValueError:
-                        print("Invalid input. Keeping the current calorie goal.")
-
             return selected_diet
         else:
             print("Invalid selection. Please try again.")
@@ -183,7 +150,7 @@ def pick_from_sorted(recipes, preferences):
             print(f"   Ingredients: {ingredients_list}\n")
 
         # Prompt the user to pick a recipe or add all remaining recipes
-        user_input = input("Enter the number of the recipe to pick or 'done' to finish: ").strip().lower()
+        user_input = input("Enter the number of the recipe you want to REMOVE or type 'done' to finish: ").strip().lower()
         
         if user_input == "done":
             # Finish the selection process
