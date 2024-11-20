@@ -5,19 +5,19 @@ class TestMealPlanner(unittest.TestCase):
 
     # Test load_preferences function - WORKS
     def test_load_preferences(self):
-        preferences = load_preferences('testproject/preferences1.json')
+        preferences = load_preferences('project/preferences.json')
         print(f"Loaded preferences: {preferences}")
         self.assertIn("user_preferences", preferences)
 
     # Test load_recipes function - WORKS
     def test_load_recipes(self):
-        recipes = load_recipes('testproject/recipes1.json')
+        recipes = load_recipes('project/recipes.json')
         print(f"Loaded recipes: {recipes}")
 
     
     # Test load_ingredients function
     def test_load_ingredients(self):
-        ingredients = load_ingredients('testproject/ingredients1.csv')
+        ingredients = load_ingredients('project/ingredients.csv')
         print(f"Loaded ingredients: {ingredients}")
 
     # Test pick_preference function - Works but might have to change if the edit calories changes
