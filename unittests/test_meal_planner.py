@@ -1,5 +1,5 @@
 import unittest
-from testproject.main_menu1 import load_preferences, load_recipes, load_ingredients, pick_preference, recommend_recipes, create_meal_plan, generate_shopping_list
+from project.main_menu import load_preferences, load_recipes, load_ingredients, pick_preference, recommend_recipes, create_meal_plan, generate_shopping_list
 
 class TestMealPlanner(unittest.TestCase):
 
